@@ -1,5 +1,5 @@
 # Selenium-ambulace-attendance
-1. I used Selenium to grab down the Taiwan Douliu ambulance attenendance, happening loaction, distribution department, types...\
+1. I used Selenium to grab down the Taiwan Douliu ambulance attenendance, happening loaction, distribution department, types...
 2. I transform the loaction to latitude and longitude.
 3. I drew the loaction to the map by folium module.
 ## Found out there is something interesting!
