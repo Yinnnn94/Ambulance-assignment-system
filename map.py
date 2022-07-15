@@ -26,3 +26,5 @@ cap_go=folium.Marker(location=[cap_go_lat[num],cap_go_log[num]],icon=folium.Icon
 yunlin_map.add_child(accident1)
 yunlin_map.add_child(cap_go)
 yunlin_map
+
+yunlin_map=folium.Map(location=[23.68,120.3],zoom_start=11)
