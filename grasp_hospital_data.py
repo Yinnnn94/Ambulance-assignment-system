@@ -6,6 +6,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 import pandas as pd
 from bs4 import BeautifulSoup
 from datetime import datetime
+import csv
+
+
 
 url = 'https://www.health.ntpc.gov.tw/basic/?mode=detail&node=788'
 
@@ -23,9 +26,9 @@ class Hospital():
         element.click()
         time.sleep(2)
 
-    def select(self, xpath, text):
-        filter = Select(self.driver.find_element('xpath', xpath))
-        filter.select_by_visible_text(text)
+    # def select(self, xpath, text):
+    #     filter = Select(self.driver.find_element('xpath', xpath))
+    #     filter.select_by_visible_text(text)
 
 
 hospital_log_path = 'hospital_log.txt'
@@ -38,6 +41,7 @@ hospital_name = []
 waiting_docs = []
 waiting_hospitalization = []
 whether_reported_119 = []
+waiting_ICU = []
 update_time = []
 waiting_bed = []
 
@@ -55,7 +59,8 @@ else:
 waiting_docs.append(hospital_table[1].find_all('td')[1].text)
 waiting_bed.append(hospital_table[2].find_all('td')[1].text)
 waiting_hospitalization.append(hospital_table[3].find_all('td')[1].text)
-update_time.append(hospital_table[-1].find_all('td')[0].text)
+waiting_ICU.append(hospital_table[4].find_all('td')[1].text)
+update_time.append(datetime.now().strftime("%Y/%m/%d") + ' ' + hospital_table[5].find_all('td')[0].text)
 
 # 亞東紀念醫院
 hospital.get_web(url)
@@ -74,7 +79,8 @@ whether_reported_119.append(need_data[0])
 waiting_docs.append(need_data[1])
 waiting_bed.append(need_data[2])
 waiting_hospitalization.append(need_data[3])
-update_time.append(driver.find_element('xpath', '//*[@id="page__main"]/div[2]/div[1]/div[1]').text.split()[1])
+waiting_ICU.append(need_data[4])
+update_time.append(driver.find_element('xpath', '//*[@id="page__main"]/div[2]/div[1]/div[1]').text.split()[0].split('：')[1] + ' ' + driver.find_element('xpath', '//*[@id="page__main"]/div[2]/div[1]/div[1]').text.split()[1])
 
 
 
@@ -86,12 +92,12 @@ driver.switch_to.window(driver.window_handles[0])
 soup = BeautifulSoup(driver.page_source, 'html.parser')
 hospital_table = soup.find('table', {'id': 'GridView2'}).find_all('tr')
 hospital_name.append('淡水馬偕醫院')
-update_time.append(hospital_table[1].find_all('td')[1].text.split()[2])
+update_time.append(hospital_table[1].find_all('td')[1].text)
 whether_reported_119.append(hospital_table[2].find_all('td')[1].text)
 waiting_docs.append(hospital_table[3].find_all('td')[1].text)
 waiting_bed.append(hospital_table[4].find_all('td')[1].text)
 waiting_hospitalization.append(hospital_table[5].find_all('td')[1].text)
-
+waiting_ICU.append(hospital_table[6].find_all('td')[1].text)
 
 
 
@@ -110,7 +116,8 @@ else:
 waiting_docs.append(hospital_table[1].find_all('td')[0].text)
 waiting_bed.append(hospital_table[1].find_all('td')[1].text)
 waiting_hospitalization.append(hospital_table[1].find_all('td')[2].text)
-update_time.append(hospital_table[1].find_all('td')[4].text.split()[-1])
+waiting_ICU.append(hospital_table[1].find_all('td')[3].text)
+update_time.append(hospital_table[1].find_all('td')[4].text)
 
 
 # 耕莘醫院
@@ -126,7 +133,8 @@ whether_reported_119.append(hospital_table[0].find_all('b')[0].text.split(' ')[0
 waiting_docs.append(hospital_table[0].find_all('b')[1].text.split(' ')[0][-2])
 waiting_bed.append(hospital_table[0].find_all('b')[2].text.split(' ')[0][-2])
 waiting_hospitalization.append(hospital_table[0].find_all('b')[3].text.split('：')[1].split()[0])
-update_time.append(driver.find_element('xpath', '//*[@id="layer3"]').text.split()[-1])
+waiting_ICU.append(hospital_table[0].find_all('b')[4].text.split('：')[1].split()[0])
+update_time.append(driver.find_element('xpath', '//*[@id="layer3"]').text)
 
 hospital.click('//*[@id="layer2"]/a')
 soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -135,7 +143,8 @@ whether_reported_119.append(hospital_table[0].find_all('b')[0].text.split('：')
 waiting_docs.append(hospital_table[1].find_all('b')[0].text.split('：')[1].split()[0])
 waiting_bed.append(hospital_table[2].find_all('b')[0].text.split('：')[1].split()[0])
 waiting_hospitalization.append(hospital_table[3].find_all('b')[0].text.split('：')[1].split()[0])
-update_time.append(driver.find_element('xpath', '//*[@id="layer3"]').text.split()[-1])
+waiting_ICU.append(hospital_table[4].find_all('b')[0].text.split('：')[1].split()[0])
+update_time.append(driver.find_element('xpath', '//*[@id="layer3"]').text)
         
 
 # 國泰綜合醫院
@@ -150,8 +159,8 @@ whether_reported_119.append(hospital_table[0].find_all('td')[2].text)
 waiting_docs.append(hospital_table[1].find_all('td')[2].text)
 waiting_bed.append(hospital_table[2].find_all('td')[2].text)
 waiting_hospitalization.append(hospital_table[3].find_all('td')[2].text)
-update_time.append(driver.find_element('xpath', '/html/body/p[2]').text.split()[1])
-
+waiting_ICU.append(hospital_table[4].find_all('td')[2].text)
+update_time.append(driver.find_element('xpath', '/html/body/p[2]').text.split()[0].split('：')[1] + ' ' + driver.find_element('xpath', '/html/body/p[2]').text.split()[1])
 
 
 # 恩主公醫院 
@@ -170,8 +179,8 @@ whether_reported_119.append(need_data[0])
 waiting_docs.append(need_data[1])
 waiting_bed.append(need_data[2])
 waiting_hospitalization.append(need_data[3])
-update_time.append(driver.find_element('xpath', '//*[@id="main"]/div/div/main/div[2]/div/div[1]').text.split()[-1])
-
+waiting_ICU.append(need_data[4])
+update_time.append(driver.find_element('xpath', '//*[@id="main"]/div/div/main/div[2]/div/div[1]').text.split()[0].split('：')[1] + ' ' + driver.find_element('xpath', '//*[@id="main"]/div/div/main/div[2]/div/div[1]').text.split()[1])
 
 
 # 耕莘醫院 - 永和分院
@@ -186,6 +195,7 @@ whether_reported_119.append(hospital_table[0].find_all('b')[0].text.split(' ')[0
 waiting_docs.append(hospital_table[1].find_all('b')[0].text.split('：')[1].split()[0])
 waiting_bed.append(hospital_table[2].find_all('b')[0].text.split('：')[1].split()[0])
 waiting_hospitalization.append(driver.find_elements('xpath', '//*[@id="Labelwaitipd"]')[0].text)
+waiting_ICU.append(hospital_table[4].find_all('b')[0].text.split('：')[1].split()[0])
 update_time.append(driver.find_element('xpath', '//*[@id="layer3"]').text)
 
 # 衛生福利部台北醫院
@@ -200,9 +210,10 @@ whether_reported_119.append(hospital_table[0].find_all('td')[1].text.split()[0])
 waiting_docs.append(hospital_table[1].find_all('td')[1].text.split()[0])
 waiting_bed.append(hospital_table[2].find_all('td')[1].text.split()[0])
 waiting_hospitalization.append(hospital_table[3].find_all('td')[1].text.split()[0])
-update_time.append(datetime.now().strftime("%H:%M:%S"))
+waiting_ICU.append(hospital_table[4].find_all('td')[1].text.split()[0])
+update_time.append(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
 
-# 聯合醫院
+# 聯合醫院 - 三重分院
 hospital.get_web(url)
 hospital.click('//*[@id="is_content"]/p[13]/a')
 driver.close()
@@ -216,15 +227,17 @@ whether_reported_119.append(hospital_table[1].find_all('td')[1].text)
 waiting_docs.append(hospital_table[1].find_all('td')[2].text)
 waiting_bed.append(hospital_table[1].find_all('td')[3].text)
 waiting_hospitalization.append(hospital_table[1].find_all('td')[4].text)
-update_time.append(hospital_table[1].find_all('td')[6].text.split()[1])
+waiting_ICU.append(hospital_table[1].find_all('td')[5].text)
+update_time.append(datetime.now().strftime('%Y') + '/' +hospital_table[1].find_all('td')[6].text)
 
+# 聯合醫院 - 板橋分院
 hospital_name.append('聯合醫院 - 板橋分院')
 whether_reported_119.append(hospital_table[2].find_all('td')[1].text)
 waiting_docs.append(hospital_table[2].find_all('td')[2].text)
 waiting_bed.append(hospital_table[2].find_all('td')[3].text)
 waiting_hospitalization.append(hospital_table[2].find_all('td')[4].text)
-update_time.append(hospital_table[2].find_all('td')[6].text.split()[1])
-
+waiting_ICU.append(hospital_table[2].find_all('td')[5].text)
+update_time.append(datetime.now().strftime('%Y') + '/' +hospital_table[2].find_all('td')[6].text)
 
 # 輔仁大學附設醫院
 hospital.get_web(url)
@@ -232,14 +245,14 @@ hospital.click('//*[@id="is_content"]/p[14]/a')
 driver.close()
 driver.switch_to.window(driver.window_handles[0])
 soup = BeautifulSoup(driver.page_source, 'html.parser')
-hospital_table = soup.find('table').find_all('tr')
+hospital_table = soup.find('div', {'id' : 'StockPricePanel'}).find_all('tr')
 hospital_name.append('輔仁大學附設醫院')
 whether_reported_119.append(hospital_table[1].find_all('td')[1].text)
 waiting_docs.append(hospital_table[2].find_all('td')[1].text.split()[0])
 waiting_bed.append(hospital_table[3].find_all('td')[1].text.split()[0])
 waiting_hospitalization.append(hospital_table[4].find_all('td')[1].text.split()[0])
-update_time.append(hospital_table[-1].find_all('td')[0].text.split()[1])
-
+waiting_ICU.append(hospital_table[5].find_all('td')[1].text.split()[0])
+update_time.append(hospital_table[-1].find_all('td')[0].text.split()[0].split('：')[1] + ' ' + hospital_table[-1].find_all('td')[0].text.split()[1])
 
 # 土城醫院
 hospital.get_web(url)
@@ -253,10 +266,18 @@ whether_reported_119.append(hospital_table[2].find_all('td')[1].text)
 waiting_docs.append(hospital_table[3].find_all('td')[1].text)
 waiting_bed.append(hospital_table[4].find_all('td')[1].text)
 waiting_hospitalization.append(hospital_table[5].find_all('td')[1].text)
-update_time.append(hospital_table[0].find_all('td')[0].text.split()[-1])
+waiting_ICU.append(hospital_table[6].find_all('td')[1].text)
+update_time.append(hospital_table[0].find_all('td')[0].text.split()[3] + ' ' + hospital_table[0].find_all('td')[0].text.split()[4])
 
-hospital_dict = {'hospital_name': hospital_name, 'waiting_docs': waiting_docs, 'waiting_bed' : waiting_bed , 'waiting_hospitalization' : waiting_hospitalization ,'whether_reported_119': whether_reported_119, 'update_time': update_time}
+hospital_dict = {'hospital_name': hospital_name, 'waiting_docs': waiting_docs, 'waiting_bed' : waiting_bed , 'waiting_hospitalization' : waiting_hospitalization, 'waiting_ICU' : waiting_ICU , 'whether_reported_119': whether_reported_119, 'update_time': update_time}
 
-hospital_data_pd = pd.DataFrame(hospital_dict)
-print(hospital_data_pd)
-hospital_data_pd.to_csv('hospital_data.csv', index = False, encoding = 'utf-8-sig')
+# hospital_data_pd = pd.DataFrame(hospital_dict)
+# print(hospital_data_pd)
+# hospital_data_pd.to_csv('.csv', index = False, encoding = 'utf-8-sig')
+
+csv_file_path = 'hospital_data.csv'
+
+with open(csv_file_path, mode='a', newline='', encoding = 'utf-8-sig') as csv_file:
+    csv_writer = csv.writer(csv_file)
+    for name, docs, beds, hospitalization, ICU, reported_119, update in zip(hospital_name, waiting_docs, waiting_bed, waiting_hospitalization, waiting_ICU, whether_reported_119, update_time):
+        csv_writer.writerow([name, docs, beds, hospitalization, ICU, reported_119, update])
