@@ -21,8 +21,6 @@ class Hospital():
         element = self.driver.find_element('xpath', xpath)
         element.click()
         time.sleep(2)
-        
-
 
 driver = webdriver.Chrome()   
 hospital = Hospital(driver)
@@ -53,7 +51,7 @@ try:
     waiting_hospitalization.append(hospital_table[3].find_all('td')[1].text)
     waiting_ICU.append(hospital_table[4].find_all('td')[1].text)
     update_time.append(datetime.now().strftime("%Y/%m/%d") + ' ' + hospital_table[5].find_all('td')[0].text)
-except NoSuchElementException as e:
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'衛生福利部雙和醫院'}\n")
@@ -79,7 +77,7 @@ try:
     waiting_hospitalization.append(need_data[3])
     waiting_ICU.append(need_data[4])
     update_time.append(driver.find_element('xpath', '//*[@id="page__main"]/div[2]/div[1]/div[1]').text.split()[0].split('：')[1] + ' ' + driver.find_element('xpath', '//*[@id="page__main"]/div[2]/div[1]/div[1]').text.split()[1])
-except NoSuchElementException as e:
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'亞東紀念醫院'}\n")
@@ -100,12 +98,19 @@ try:
     waiting_bed.append(hospital_table[4].find_all('td')[1].text)
     waiting_hospitalization.append(hospital_table[5].find_all('td')[1].text)
     waiting_ICU.append(hospital_table[6].find_all('td')[1].text)
-except NoSuchElementException as e:
+    hospital.click('//*[@id="RadioButtonList1_1"]')
+    hospital_name.append('馬偕醫院 - 淡水分院')
+    update_time.append(hospital_table[1].find_all('td')[1].text)
+    whether_reported_119.append(hospital_table[2].find_all('td')[1].text)
+    waiting_docs.append(hospital_table[3].find_all('td')[1].text)
+    waiting_bed.append(hospital_table[4].find_all('td')[1].text)
+    waiting_hospitalization.append(hospital_table[5].find_all('td')[1].text)
+    waiting_ICU.append(hospital_table[6].find_all('td')[1].text)
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
-        file.write(f"Failed to scrape data from: {'馬偕醫院 - 台北分院'}\n")
+        file.write(f"Failed to scrape data from: {'馬偕醫院'}\n")
 
-    
 
 
 # 慈濟醫院 
@@ -126,7 +131,7 @@ try:
     waiting_hospitalization.append(hospital_table[1].find_all('td')[2].text)
     waiting_ICU.append(hospital_table[1].find_all('td')[3].text)
     update_time.append(hospital_table[1].find_all('td')[4].text)
-except NoSuchElementException as e:
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'慈濟醫院'}\n")
@@ -157,7 +162,7 @@ try:
     waiting_hospitalization.append(hospital_table[3].find_all('b')[0].text.split('：')[1].split()[0])
     waiting_ICU.append(hospital_table[4].find_all('b')[0].text.split('：')[1].split()[0])
     update_time.append(driver.find_element('xpath', '//*[@id="layer3"]').text)
-except NoSuchElementException as e:
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'耕莘醫院'}\n")
@@ -178,7 +183,7 @@ try:
     waiting_hospitalization.append(hospital_table[3].find_all('td')[2].text)
     waiting_ICU.append(hospital_table[4].find_all('td')[2].text)
     update_time.append(driver.find_element('xpath', '/html/body/p[2]').text.split()[0].split('：')[1] + ' ' + driver.find_element('xpath', '/html/body/p[2]').text.split()[1])
-except NoSuchElementException as e:
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'國泰綜合醫院'}\n")
@@ -194,7 +199,6 @@ try:
         element = driver.find_element('xpath', f'//*[@id="main"]/div/div/main/div[2]/div/div[3]/div[{i}]').text
         text_split = element.split()
         need_data.append(text_split[1])
-
     hospital_name.append('恩主公醫院')
     whether_reported_119.append(need_data[0])
     waiting_docs.append(need_data[1])
@@ -202,7 +206,7 @@ try:
     waiting_hospitalization.append(need_data[3])
     waiting_ICU.append(need_data[4])
     update_time.append(driver.find_element('xpath', '//*[@id="main"]/div/div/main/div[2]/div/div[1]').text.split()[0].split('：')[1] + ' ' + driver.find_element('xpath', '//*[@id="main"]/div/div/main/div[2]/div/div[1]').text.split()[1])
-except NoSuchElementException as e:
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'恩主公醫院'}\n")
@@ -222,7 +226,7 @@ try:
     waiting_hospitalization.append(driver.find_elements('xpath', '//*[@id="Labelwaitipd"]')[0].text)
     waiting_ICU.append(hospital_table[4].find_all('b')[0].text.split('：')[1].split()[0])
     update_time.append(driver.find_element('xpath', '//*[@id="layer3"]').text)
-except NoSuchElementException as e:
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'耕莘醫院 - 永和分院'}\n")
@@ -242,7 +246,7 @@ try:
     waiting_hospitalization.append(hospital_table[3].find_all('td')[1].text.split()[0])
     waiting_ICU.append(hospital_table[4].find_all('td')[1].text.split()[0])
     update_time.append(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
-except NoSuchElementException as e:
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'衛生福利部台北醫院'}\n")
@@ -264,7 +268,7 @@ try:
     waiting_hospitalization.append(hospital_table[1].find_all('td')[4].text)
     waiting_ICU.append(hospital_table[1].find_all('td')[5].text)
     update_time.append(datetime.now().strftime('%Y') + '/' +hospital_table[1].find_all('td')[6].text)
-except NoSuchElementException as e:
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'聯合醫院 - 三重分院'}\n")    
@@ -278,7 +282,7 @@ try:
     waiting_hospitalization.append(hospital_table[2].find_all('td')[4].text)
     waiting_ICU.append(hospital_table[2].find_all('td')[5].text)
     update_time.append(datetime.now().strftime('%Y') + '/' +hospital_table[2].find_all('td')[6].text)
-except NoSuchElementException as e:
+except:
      with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'聯合醫院 - 板橋分院'}\n")    
@@ -298,7 +302,7 @@ try:
     waiting_hospitalization.append(hospital_table[4].find_all('td')[1].text.split()[0])
     waiting_ICU.append(hospital_table[5].find_all('td')[1].text.split()[0])
     update_time.append(hospital_table[-1].find_all('td')[0].text.split()[0].split('：')[1] + ' ' + hospital_table[-1].find_all('td')[0].text.split()[1])
-except NoSuchElementException as e:
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'輔仁大學附設醫院'}\n")
@@ -319,7 +323,7 @@ try:
     waiting_ICU.append(hospital_table[6].find_all('td')[1].text)
     update_time.append(hospital_table[0].find_all('td')[0].text.split('：')[1])
     hospital_dict = {'hospital_name': hospital_name, 'waiting_docs': waiting_docs, 'waiting_bed' : waiting_bed , 'waiting_hospitalization' : waiting_hospitalization, 'waiting_ICU' : waiting_ICU , 'whether_reported_119': whether_reported_119, 'update_time': update_time}
-except NoSuchElementException as e:
+except:
     with open('failed_urls.txt', 'a', encoding='utf-8') as file:
         file.write(f"Time: {datetime.now().strftime('%Y/%m/%d %H:%M:%S')}\n")
         file.write(f"Failed to scrape data from: {'土城醫院'}\n")
