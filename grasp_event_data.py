@@ -13,8 +13,6 @@ ambulance_url = 'https://e.tpf.gov.tw/'
 
 log_path = 'ambulance_log.txt'
 
-
-
 class Ambulance():
     def __init__(self, driver) -> None:
         self.driver = driver
